@@ -2,7 +2,11 @@
 // Created by Matthew Michaelis on 2/16/2016.
 //
 
+#include <algorithm>
 #include "Cluster.h"
+#include <string>
+#include <sstream>
+#include <w32api/msclus.h>
 
 namespace Clustering {
 
@@ -90,7 +94,7 @@ namespace Clustering {
 
         if (__points->next == nullptr) {
             LNode *N = new LNode(pNew, nullptr);
-            if(N->point <= __points->point){
+            if(N->point < __points->point){
                 N->next = __points;
                 __points = N;
                 ++__size;
@@ -105,7 +109,8 @@ namespace Clustering {
         LNode *N = new LNode(pNew, nullptr);
         LNodePtr temp = __points->next;
         LNodePtr prev = __points;
-        if(N->point <= __points->point){
+
+        if(N->point < __points->point){
             __points = N;
             N->next = prev;
             ++__size;
@@ -121,8 +126,8 @@ namespace Clustering {
 
         while (temp->next != nullptr) {
             if(N->point < temp->point){
-                prev->next = N;
-                N->next = temp;
+                prev = N;
+                N->next = prev;
                 ++__size;
                 return;
             }
@@ -179,12 +184,12 @@ namespace Clustering {
             return false;
         }
         temp = __points->next;
-        for(int i = 0; i < __size; ++i){
-            if(temp->point == P1){
-                return true;
+            for(int i = 1; i < __size; ++i){
+                if(temp->point == P1){
+                    return true;
+                }
+                temp = temp->next;
             }
-            temp = temp->next;
-        }
         return false;
     }
 
@@ -217,4 +222,122 @@ namespace Clustering {
     bool operator!=(const Cluster & C1, const Cluster & C2){
         return !(C1 == C2);
     }
+
+    Cluster & Cluster::operator+=(const Point & P1){
+        this->add(P1);
+        return *this;
+    }
+    Cluster & Cluster::operator-=(const Point & P1){
+        this->remove(P1);
+        return *this;
+    }
+
+    // Members: Compound assignment (Cluster argument)
+    Cluster &Cluster::operator+=(const Cluster & C2) { // union
+
+        for(int i = 0; i < C2.getSize(); ++i){
+            if(!(this->contains(C2[i]))){
+                this->add(C2[i]);
+            }
+        }
+
+        return *this;
+    }
+
+    Cluster &Cluster::operator-=(const Cluster & C2){ // (asymmetric) difference
+        for(int i = 0; i < C2.getSize(); ++i){
+            if(this->contains(C2[i])){
+                this->remove(C2[i]);
+            }
+        }
+        return *this;
+    }
+    // Friends: Arithmetic (Cluster and Point)
+    const Cluster operator+(const Cluster &C1, const Point &P1){
+        Cluster *C2 = new Cluster(C1);
+        if(!(C2->contains(P1))){
+            C2->add(P1);
+        }else{
+            return C1;
+        }
+        return *C2;
+    }
+    const Cluster operator-(const Cluster &C1, const Point &P1){
+        Cluster *C2 = new Cluster(C1);
+        if(C2->contains(P1)){
+            C2->remove(P1);
+        }else{
+            return C1;
+        }
+        return *C2;
+    }
+
+    // Friends: Arithmetic (two Clusters)
+    const Cluster operator+(const Cluster &C1, const Cluster &C2){
+        Cluster *C3 = new Cluster(C1);
+        Cluster *C4 = new Cluster(C2);
+
+        for(int i = 0; i < C4->getSize(); ++i){
+            if(!(C3->contains(C2[i]))){
+                C3->add(C2[i]);
+            }
+        }
+        delete C4;
+        return *C3;
+    }
+
+    const Cluster operator-(const Cluster &C1, const Cluster &C2){
+        Cluster *C3 = new Cluster(C1);
+        Cluster *C4 = new Cluster(C2);
+
+        for(int i = 0; i < C3->getSize(); ++i){
+            if(C3->contains(C2[i])){
+                C3->remove(C2[i]);
+            }
+        }
+        delete C4;
+        return *C3;
+    }
+
+    std::ostream &operator<<(std::ostream & out, const Cluster & C1){
+        LNodePtr temp = C1.__points;
+        for(int i = 0; i < C1.__size; ++i){
+            out << temp->point << std::endl;
+            temp = temp->next;
+        }
+        return out;
+    }
+
+    std::istream &operator>>(std::istream & in, Cluster& C1){
+        std::string temp;
+        std::getline(in,temp);
+        std::stringstream s(temp);
+        double tempD;
+        int dim = 0;
+        while (!in.eof()){
+            s >> tempD;
+            in.ignore();
+            dim++;
+
+        }
+        Point nPoint(dim);
+        s >> nPoint;
+        C1.add(nPoint);
+
+        while(!in.eof()){
+            dim = 0;
+            while (!in.eof()){
+                s >> tempD;
+                in.ignore();
+                dim++;
+            }
+            Point nPoint(dim);
+            s >> nPoint;
+            C1.add(nPoint);
+
+        }
+        return in;
+    }
+
+
 }
