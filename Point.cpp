@@ -126,37 +126,43 @@ namespace Clustering {
         return !(P1 == P2);
     }
 
-    bool operator<(const Point & P1, const Point & P2){
+    bool operator<(const Point & P1, const Point & P2) {
 
-        if(P1.getDims() < P2.getDims()){
-            return 1;
+        if (P1.__dim < P2.__dim) {
+            return true;
         }
-        if(P1.getDims() > P2.getDims()){
-            return 0;
+        if (P1.__dim > P2.__dim) {
+            return false;
         }
 
-        for(int i = 0; i < P1.getDims(); ++i){
-            if(P1.__values[i] < P2.__values[i]){
-                return 1;
+            for (int i = 0; i < P1.getDims(); ++i) {
+                if (P1.__values[i] < P2.__values[i]) {
+                    return true;
+                }else if(P1.__values[i] > P2.__values[i]){
+                    return false;
+                }
             }
-        }
-        return 0;
+        return false;
+
     }
 
     bool operator>(const Point & P1, const Point &P2){
-        if(P1.getDims() > P2.getDims()){
-            return 1;
+
+        if(P1.__dim > P2.__dim){
+            return true;
         }
-        if(P1.getDims() < P2.getDims()){
-            return 0;
+        if(P1.__dim < P2.__dim){
+            return false;
         }
 
         for(int i = 0; i < P1.getDims(); ++i){
             if(P1.__values[i] > P2.__values[i]){
-                return 1;
+                return true;
+            }else if(P1.__values[i] < P2.__values[i]){
+                return false;
             }
         }
-        return 0;
+        return false;
     }
 
     bool operator<=(const Point & P1, const Point &P2){
@@ -243,5 +249,4 @@ namespace Clustering {
         }
         return in;
     }
-
 }

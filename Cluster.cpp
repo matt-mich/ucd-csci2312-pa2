@@ -307,7 +307,7 @@ namespace Clustering {
         }
         return out;
     }
-
+    // Function does not work, currently just a compilation of possible ideas.
     std::istream &operator>>(std::istream & in, Cluster& C1){
         std::string temp;
         std::getline(in,temp);
