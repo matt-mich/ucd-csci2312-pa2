@@ -24,6 +24,7 @@ namespace Clustering {
         // Accessors & mutators
         int getId() const;
         int getDims() const;
+
         void setValue(int, double);
         double getValue(int) const;
 
@@ -32,9 +33,11 @@ namespace Clustering {
 
         // Overloaded operators
 
+
         // Members
         Point &operator*=(double); // p *= 6; p.operator*=(6);
         Point &operator/=(double);
+
         const Point operator*(double) const; // prevent (p1 * 2) = p2;
         const Point operator/(double) const; // p3 = p2 / 2;
 
@@ -43,6 +46,7 @@ namespace Clustering {
         // Friends
         friend Point &operator+=(Point &, const Point &);
         friend Point &operator-=(Point &, const Point &);
+
         friend const Point operator+(const Point &, const Point &);
         friend const Point operator-(const Point &, const Point &);
 
@@ -56,6 +60,7 @@ namespace Clustering {
 
         friend std::ostream &operator<<(std::ostream &, const Point &);
         friend std::istream &operator>>(std::istream &, Point &);
+
     };
 
 }

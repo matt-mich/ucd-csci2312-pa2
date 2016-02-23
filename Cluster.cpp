@@ -4,9 +4,13 @@
 
 #include <algorithm>
 #include "Cluster.h"
+#include <limits>
 #include <string>
 #include <sstream>
+
+//Included automatically by CLion after if got confused about something. Not sure what it does.
 #include <w32api/msclus.h>
+#include <stdio.h>
 
 namespace Clustering {
 
@@ -27,7 +31,6 @@ namespace Clustering {
     Cluster& Cluster::operator=(const Cluster & other){
         if(this != &other){
             //delete & copy
-            //double *newVal = new double{other.getDims()};
             __size = other.__size;
             __del();
             __cpy(other.__points);
@@ -35,7 +38,7 @@ namespace Clustering {
         return *this;
     }
     Cluster::~Cluster(){
-
+        // If I add __del(); here, it crashes, but I should probably have it here.
     }
 
     int Cluster::getSize() const{
@@ -307,37 +310,51 @@ namespace Clustering {
         }
         return out;
     }
-    // Function does not work, currently just a compilation of possible ideas.
-    std::istream &operator>>(std::istream & in, Cluster& C1){
+    // Function is messy, and probably has a lot of unnecessary stuff, but works.
+    std::istream &operator>>(std::istream & in, Cluster& C1) {
+
         std::string temp;
-        std::getline(in,temp);
-        std::stringstream s(temp);
-        double tempD;
+        std::getline(in, temp);
+        std::stringstream s;
+        s.str(temp);
+
+        double tempD = 0;
         int dim = 0;
-        while (!in.eof()){
+        while (!s.eof()) {
             s >> tempD;
-            in.ignore();
+            s.ignore();
             dim++;
-
         }
-        Point nPoint(dim);
-        s >> nPoint;
-        C1.add(nPoint);
+        --dim;
+        bool run = false;
+        int index = 0;
+        while (in.peek() != EOF) {
 
-        while(!in.eof()){
-            dim = 0;
-            while (!in.eof()){
-                s >> tempD;
-                in.ignore();
-                dim++;
+            Point *nPoint = new Clustering::Point(dim);
+            if (run) {
+                temp = "";
+                std::getline(in, temp);
+                temp.erase(remove_if(temp.begin(), temp.end(), isspace), temp.end());
             }
-            Point nPoint(dim);
-            s >> nPoint;
-            C1.add(nPoint);
+                s.str("");
+                s.clear();
+                s.str(temp);
 
+                while ((s.peek() != '\n') || (s.peek() != '\r') || (s.peek() != EOF)) {
+                    s >> tempD;
+                    nPoint->setValue(index, tempD);
+                    if ((s.peek() == '\n') || (s.peek() == '\r') || (s.peek() == EOF)) {
+                        run = true;
+                        C1.add(*nPoint);
+                        index = 0;
+                        delete nPoint;
+                        break;
+                    } else {
+                        s.ignore();
+                        index++;
+                    }
+                }
         }
         return in;
     }
-
-
 }

@@ -58,6 +58,7 @@ namespace Clustering {
         friend std::ostream &operator<<(std::ostream &, const Cluster &);
         friend std::istream &operator>>(std::istream &, Cluster &);
 
+
         // Friends: Comparison
         friend bool operator==(const Cluster &, const Cluster &);
         friend bool operator!=(const Cluster &, const Cluster &);

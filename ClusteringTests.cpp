@@ -7,6 +7,7 @@
 #include <cassert>
 #include <iomanip>
 #include <fstream>
+#include <limits>
 
 #include "ClusteringTests.h"
 #include "Point.h"
@@ -77,6 +78,8 @@ void test_point_smoketest(ErrorContext &ec) {
     }
     ec.result(pass);
 }
+
+
 
 // id
 void test_point_id(ErrorContext &ec, unsigned int numRuns) {
@@ -847,13 +850,18 @@ void test_cluster_addremove(ErrorContext &ec, unsigned int numRuns) {
                     p2(10),
                     p3(10);
             Cluster c1;
-            c1.add(p1); c1.add(p2); c1.add(p3);
-            c1.remove(p1); c1.remove(p2); c1.remove(p3);
+            c1.add(p1);
+            c1.add(p2);
+            c1.add(p3);
+
+            c1.remove(p1);
+            c1.remove(p2);
+            c1.remove(p3);
 
             pass = (c1.getSize() == 0);
             if (!pass) {
                 std::cout << std::endl;
-                std::cout << c1 << std::endl;
+//                std::cout << c1 << std::endl;
                 std::cout << std::endl;
             }
 
@@ -1576,4 +1584,6 @@ void test_cluster_IO(ErrorContext &ec, unsigned int numRuns) {
             ec.result(pass);
         }
     }
+
 }
+

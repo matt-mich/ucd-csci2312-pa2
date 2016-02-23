@@ -242,8 +242,11 @@ namespace Clustering {
 
     std::istream &operator>>(std::istream &in, Point &P1){
         int index = 0;
-        while (!in.eof()){
+        while ((in.peek() != '\n') || (in.peek() != '\r')){
             in >> P1[index];
+            if((in.peek() == '\n') || (in.peek() == '\r') || (in.eof())){
+                return in;
+            }
             in.ignore();
             index++;
         }

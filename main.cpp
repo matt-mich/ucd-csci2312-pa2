@@ -42,6 +42,8 @@ int main() {
     test_point_distance(ec, NumIters);
     test_point_IO(ec, NumIters);
 
+
+
     // cluster tests
     test_cluster_smoketest(ec);
     test_cluster_subscript(ec, NumIters);
@@ -52,7 +54,10 @@ int main() {
     test_cluster_copying(ec, NumIters);
     test_cluster_assignment(ec, NumIters);
     test_cluster_CAO(ec, NumIters);
+
+
     test_cluster_SAO(ec, NumIters);
+
     test_cluster_IO(ec, NumIters);
 
     return 0;
