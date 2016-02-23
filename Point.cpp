@@ -46,9 +46,8 @@ namespace Clustering {
         }
         return *this;
     }
-
+    // Should automatically delete __values
     Point::~Point(){
-     //   delete[] this->__values;
     }
 
     int Point::getId() const{

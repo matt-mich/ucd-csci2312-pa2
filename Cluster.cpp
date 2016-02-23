@@ -38,7 +38,7 @@ namespace Clustering {
         return *this;
     }
     Cluster::~Cluster(){
-        // If I add __del(); here, it crashes, but I should probably have it here.
+        __del();
     }
 
     int Cluster::getSize() const{
@@ -46,24 +46,18 @@ namespace Clustering {
     }
 
     void Cluster::__del(){
-        LNodePtr temp;
-        LNodePtr prev;
-        while(__points != nullptr){
-            temp = __points;
-            if(temp->next == nullptr){
-                delete temp;
-                __points = nullptr;
-                return;
+        LNodePtr curr = __points;
+
+        LNodePtr next;
+
+        for(int i = 0; i < __size; ++i){
+            if(__points != nullptr){
+                next = curr->next;
+                delete curr;
+                curr = next;
             }
-            prev = temp;
-            temp = temp->next;
-            while(temp->next != nullptr){
-                temp = temp->next;
-                prev = prev->next;
-            }
-            prev->next = nullptr;
-            delete temp;
         }
+        __points = nullptr;
     }
 
     void Cluster::__cpy(LNodePtr pts){
