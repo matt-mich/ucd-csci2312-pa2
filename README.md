@@ -10,5 +10,5 @@ _operator overloading and linked data structures_
         points and the clusters, find the distance between points, and stream both clusters and points in from a
         stream, and out to a stream.
 
-            Created and compiled by Matthew Michaelis, based on the Programming Assignment 2 source files
-        in C++ using CLion 1.2.4.
+            Created by Matthew Michaelis, based on the Programming Assignment 2 source files
+        in C++ using CLion 1.2.4, cmake 3.3.2, GCC 4.9.3. Also tested on the csegrid using GCC 4.8.2.

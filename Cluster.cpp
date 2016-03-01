@@ -4,12 +4,9 @@
 
 #include <algorithm>
 #include "Cluster.h"
-#include <limits>
-#include <string>
 #include <sstream>
 
 //Included automatically by CLion after if got confused about something. Not sure what it does.
-#include <w32api/msclus.h>
 #include <stdio.h>
 
 namespace Clustering {
@@ -304,6 +301,7 @@ namespace Clustering {
         }
         return out;
     }
+
     // Function is messy, and probably has a lot of unnecessary stuff, but works.
     std::istream &operator>>(std::istream & in, Cluster& C1) {
 
@@ -312,18 +310,17 @@ namespace Clustering {
         std::stringstream s;
         s.str(temp);
 
-        double tempD = 0;
         int dim = 0;
+        double tempD = 0;
         while (!s.eof()) {
             s >> tempD;
-            s.ignore();
+            s.ignore(10, ',');
             dim++;
         }
-        --dim;
+
         bool run = false;
         int index = 0;
         while (in.peek() != EOF) {
-
             Point *nPoint = new Clustering::Point(dim);
             if (run) {
                 temp = "";

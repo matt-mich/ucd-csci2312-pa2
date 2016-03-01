@@ -2,7 +2,7 @@
 // Created by Matthew Michaelis on 2/16/2016.
 //
 
-#include "point.h"
+#include "Point.h"
 #include <cmath>
 
 namespace Clustering {
@@ -241,12 +241,13 @@ namespace Clustering {
 
     std::istream &operator>>(std::istream &in, Point &P1){
         int index = 0;
+
         while ((in.peek() != '\n') || (in.peek() != '\r')){
             in >> P1[index];
             if((in.peek() == '\n') || (in.peek() == '\r') || (in.eof())){
                 return in;
             }
-            in.ignore();
+            in.ignore(100, ',');
             index++;
         }
         return in;
